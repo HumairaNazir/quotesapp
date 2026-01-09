@@ -12,11 +12,18 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<QuotesProvider>(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Quotes App"),
+        title: Text(
+          "Daily Quotes",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.favorite),
@@ -31,87 +38,138 @@ class HomeScreen extends StatelessWidget {
       ),
       body: provider.currentQuote == null
           ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    provider.currentQuote!.quoteText,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "- ${provider.currentQuote!.quoteAuthor}",
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // ❤️ Favorite
-                      IconButton(
-                        icon: Icon(
-                          provider.isQuoteFavorite(provider.currentQuote!)
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: Colors.red,
-                          size: 30,
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Card(
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        onPressed: () {
-                          provider.toggleQuoteFavorite(provider.currentQuote!);
-                        },
+                        color: theme.cardColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '"${provider.currentQuote!.quoteText}"',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.lora(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w600,
+                                  color: theme.textTheme.bodyLarge?.color,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+
+                              Text(
+                                "- ${provider.currentQuote!.quoteAuthor}",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontStyle: FontStyle.italic,
+                                  color: theme.textTheme.bodySmall?.color,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Buttons Row
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Favorite
+                                  IconButton(
+                                    icon: Icon(
+                                      provider.isQuoteFavorite(
+                                            provider.currentQuote!,
+                                          )
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: Colors.red,
+                                      size: 28,
+                                    ),
+                                    onPressed: () {
+                                      provider.toggleQuoteFavorite(
+                                        provider.currentQuote!,
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 16),
+
+                                  // Copy
+                                  IconButton(
+                                    icon: const Icon(Icons.copy, size: 28),
+                                    onPressed: () {
+                                      final quote = provider.currentQuote!;
+                                      final text =
+                                          "${quote.quoteText}\n- ${quote.quoteAuthor}";
+                                      Clipboard.setData(
+                                        ClipboardData(text: text),
+                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text("Copied to clipboard!"),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 16),
+
+                                  // Share
+                                  IconButton(
+                                    icon: const Icon(Icons.share, size: 28),
+                                    onPressed: () {
+                                      final quote = provider.currentQuote!;
+                                      final text =
+                                          "${quote.quoteText}\n- ${quote.quoteAuthor}";
+                                      Share.share(text);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-
-                      const SizedBox(width: 20),
-
-                      // 📋 Copy
-                      IconButton(
-                        icon: const Icon(Icons.copy, size: 28),
-                        onPressed: () {
-                          final quote = provider.currentQuote!;
-                          final text =
-                              "${quote.quoteText}\n- ${quote.quoteAuthor}";
-
-                          Clipboard.setData(ClipboardData(text: text));
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Copied to clipboard!"),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(width: 20),
-
-                      // ↗️ Share
-                      IconButton(
-                        icon: const Icon(Icons.share, size: 28),
-                        onPressed: () {
-                          final quote = provider.currentQuote!;
-                          final text =
-                              "${quote.quoteText}\n- ${quote.quoteAuthor}";
-                          Share.share(text);
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: provider.getRandomQuote,
-                    child: const Text("Next Quote"),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 32,
                   ),
-                ],
-              ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        elevation: 5,
+                      ),
+                      onPressed: provider.getRandomQuote,
+                      child: Text(
+                        "Next Quote",
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
     );
   }
