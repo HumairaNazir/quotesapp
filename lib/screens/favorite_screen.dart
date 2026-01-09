@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../providers/quotes_provider.dart';
 
 class FavoriteScreen extends StatelessWidget {
@@ -8,37 +10,100 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<QuotesProvider>(context);
+    final favorites = provider.favorites;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Favorite Quotes"), centerTitle: true),
-      body: provider.favorites.isEmpty
+      appBar: AppBar(
+        title: Text(
+          "Favorite Quotes",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+      body: favorites.isEmpty
           ? const Center(
-              child: Text(
-                "No favorite quotes yet ❤️",
-                style: TextStyle(fontSize: 18),
-              ),
+              child: Text("No favorites yet!", style: TextStyle(fontSize: 18)),
             )
           : ListView.builder(
-              itemCount: provider.favorites.length,
+              padding: const EdgeInsets.all(16),
+              itemCount: favorites.length,
               itemBuilder: (context, index) {
-                final quote = provider.favorites[index];
-
+                final quote = favorites[index];
                 return Card(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                  elevation: 6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  child: ListTile(
-                    title: Text(
-                      quote.quoteText,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    subtitle: Text("- ${quote.quoteAuthor}"),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        provider.toggleQuoteFavorite(quote);
-                      },
+                  margin: const EdgeInsets.symmetric(vertical: 12),
+                  color: Theme.of(context).cardColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Quote Text
+                        Text(
+                          '"${quote.quoteText}"',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.lora(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Author
+                        Text(
+                          "- ${quote.quoteAuthor}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Buttons Row (Delete + Share)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Delete
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              icon: const Icon(Icons.delete, size: 20),
+                              label: const Text("Delete"),
+                              onPressed: () {
+                                provider.toggleQuoteFavorite(quote);
+                              },
+                            ),
+                            const SizedBox(width: 16),
+
+                            // Share
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.deepPurple,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              icon: const Icon(Icons.share, size: 20),
+                              label: const Text("Share"),
+                              onPressed: () {
+                                final text =
+                                    '"${quote.quoteText}"\n- ${quote.quoteAuthor}';
+                                Share.share(text);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 );
