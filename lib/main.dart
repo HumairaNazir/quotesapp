@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quotes/providers/quotes_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:quotes/screens/home_screen.dart';
+import 'package:quotes/screens/splash_screen.dart';
 
 void main() {
   runApp(
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }
