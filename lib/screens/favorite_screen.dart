@@ -11,14 +11,22 @@ class FavoriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<QuotesProvider>(context);
     final favorites = provider.favorites;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 6,
+
         title: Text(
           "Favorite Quotes",
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
+        backgroundColor: Color(0xFF6A1B9A),
+        shadowColor: Colors.black.withOpacity(0.3),
       ),
       body: favorites.isEmpty
           ? const Center(

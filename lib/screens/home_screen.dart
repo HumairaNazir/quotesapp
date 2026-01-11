@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../providers/quotes_provider.dart';
+import '../widgets/app_button_widget.dart';
 import 'favorite_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -19,14 +20,19 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Daily Quotes",
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        elevation: 0,
+        backgroundColor: Color(0xFF6A1B9A),
+        shadowColor: Colors.black.withOpacity(0.3),
+
+        elevation: 6,
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite),
+            icon: const Icon(Icons.favorite, color: Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
@@ -141,34 +147,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 32,
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 55,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: 5,
-                      ),
-                      onPressed: provider.getRandomQuote,
-                      child: Text(
-                        "Next Quote",
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                button(provider: provider, text: "Next Quote"),
               ],
             ),
     );
