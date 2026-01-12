@@ -40,6 +40,7 @@ dependencies:
   shared_preferences: ^2.5.4
   lottie: ^3.3.2
   flutter_native_splash: ^2.4.7
+  audioplayers: ^6.5.1
 
 
 
@@ -73,6 +74,7 @@ flutter:
     - assets/quotes.json
     - assets/animations/
     - assets/images/
+    - assets/sounds/
 
 flutter_native_splash:
   color: "#FFFFFF"

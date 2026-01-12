@@ -1,47 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../providers/quotes_provider.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-class button extends StatelessWidget {
+class Button extends StatelessWidget {
   final String text;
+  final IconData? icon;
+  final VoidCallback onPressed;
+  final Color startColor;
+  final Color endColor;
+  final bool playSound;
+  final double height;
 
-  const button({super.key, required this.provider, required this.text});
+  final AudioPlayer _player = AudioPlayer();
 
-  final QuotesProvider provider;
+  Button({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.icon,
+    this.startColor = const Color(0xFF6A1B9A),
+    this.endColor = const Color(0xFFE040FB),
+    this.playSound = false,
+    this.height = 55,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      child: Container(
-        width: double.infinity,
-        height: 55,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF6A1B9A), Color(0xFFE040FB)],
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [startColor, endColor]),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
           ),
-          borderRadius: BorderRadius.circular(30),
+          elevation: 0,
         ),
-
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+        onPressed: () async {
+          if (playSound) {
+            await _player.play(AssetSource("sounds/ui_tap.mp3"));
+          }
+          onPressed();
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, color: Colors.white),
+              const SizedBox(width: 8),
+            ],
+            Text(
+              text,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
-            elevation: 0,
-          ),
-          onPressed: provider.getRandomQuote,
-          child: Text(
-            text,
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
+          ],
         ),
       ),
     );

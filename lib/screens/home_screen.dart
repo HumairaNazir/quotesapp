@@ -87,7 +87,6 @@ class HomeScreen extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // Favorite
                                   IconButton(
                                     icon: Icon(
                                       provider.isQuoteFavorite(
@@ -147,7 +146,19 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                button(provider: provider, text: "Next Quote"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
+                  child: Button(
+                    text: "Next Quote",
+                    playSound: true,
+                    onPressed: () {
+                      provider.getRandomQuote();
+                    },
+                  ),
+                ),
               ],
             ),
     );

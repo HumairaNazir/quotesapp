@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../providers/quotes_provider.dart';
+import '../widgets/app_button_widget.dart';
 
 class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
@@ -71,43 +72,37 @@ class FavoriteScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
 
-                        // Buttons Row (Delete + Share)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Delete
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.redAccent,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                            Expanded(
+                              child: Button(
+                                text: "Delete",
+                                icon: Icons.delete,
+                                height: 45,
+                                startColor: Colors.red.shade700,
+                                endColor: Colors.redAccent,
+                                onPressed: () {
+                                  provider.toggleQuoteFavorite(quote);
+                                },
                               ),
-                              icon: const Icon(Icons.delete, size: 20),
-                              label: const Text("Delete"),
-                              onPressed: () {
-                                provider.toggleQuoteFavorite(quote);
-                              },
                             ),
+
                             const SizedBox(width: 16),
 
-                            // Share
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.deepPurple,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                            Expanded(
+                              child: Button(
+                                text: "Share",
+                                icon: Icons.share,
+                                height: 45,
+                                startColor: Colors.deepPurple,
+                                endColor: Colors.purpleAccent,
+                                onPressed: () {
+                                  final text =
+                                      '"${quote.quoteText}"\n- ${quote.quoteAuthor}';
+                                  Share.share(text);
+                                },
                               ),
-                              icon: const Icon(Icons.share, size: 20),
-                              label: const Text("Share"),
-                              onPressed: () {
-                                final text =
-                                    '"${quote.quoteText}"\n- ${quote.quoteAuthor}';
-                                Share.share(text);
-                              },
                             ),
                           ],
                         ),
