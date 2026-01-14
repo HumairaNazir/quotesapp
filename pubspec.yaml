@@ -41,6 +41,7 @@ dependencies:
   lottie: ^3.3.2
   flutter_native_splash: ^2.4.7
   audioplayers: ^6.5.1
+  url_launcher: ^6.3.2
 
 
 

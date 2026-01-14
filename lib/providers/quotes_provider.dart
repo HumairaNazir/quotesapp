@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../data/quotes_loader.dart';
 import '../models/quote_model.dart';
 
@@ -75,6 +76,15 @@ class QuotesProvider extends ChangeNotifier {
       final randomIndex = Random().nextInt(_quotes.length);
       _currentQuote = _quotes[randomIndex];
       notifyListeners();
+    }
+  }
+
+  void launchRateApp() async {
+    final url = Uri.parse(
+      "https://play.google.com/store/apps/details?id=com.yourapp.package",
+    );
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
     }
   }
 }
